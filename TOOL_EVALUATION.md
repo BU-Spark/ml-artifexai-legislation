@@ -52,7 +52,7 @@
   * Would need to either manually or automate input information from website into table or datastructure  
 * [Massachusetts Office of Campaign and Political Finance (OCPF):](https://www.ocpf.us/) Tracks campaign contributions and expenditures for candidates and committees in Massachusetts. Offers granular data on local funding sources.  
   *  link financial records to legislators to analyze whether certain donations align with patterns in bill sponsorship or voting behavior.  
-* social media: public perception?  
+* social media
 * economic datasets
 
 ### **Data Visualization Tools**
