@@ -1,8 +1,11 @@
 ***Project Information*** 
 
 * What is the project name?  
-* What is the link to your project’s GitHub repository?   
+  * ArtifexAI: Tech-Focused Legislation Tracker 
+* What is the link to your project’s GitHub repository?  
+  * https://github.com/BU-Spark/ml-artifexai-legislation/
 * What is the link to your project’s Google Drive folder? \*\**This should be a Spark\! Owned Google Drive folder \- please contact your PM if you do not have access\*\**  
+  * https://drive.google.com/drive/folders/1tpqB3-vQwLCt7G42iU9PmEuvdhf6AYaq
 * In your own words, what is this project about? What is the goal of this project?   
 * Who is the client for the project?  
 * Who are the client contacts for the project?  
@@ -24,12 +27,19 @@
 *Composition*
 
 * What do the instances that comprise the dataset represent (e.g., documents, photos, people, countries)? Are there multiple types of instances (e.g., movies, users, and ratings; people and interactions between them; nodes and edges)? What is the format of the instances (e.g., image data, text data, tabular data, audio data, video data, time series, graph data, geospatial data, multimodal (please specify), etc.)? Please provide a description.   
+  * The instances represent bills, the data format is text data. There is no interaction between the different bills and there is only one type of instance. 
 * How many instances are there in total (of each type, if appropriate)?  
+  * 70641 instances
 * Does the dataset contain all possible instances or is it a sample (not necessarily random) of instances from a larger set? If the dataset is a sample, then what is the larger set? Is the sample representative of the larger set? If so, please describe how this representativeness was validated/verified. If it is not representative of the larger set, please describe why not (e.g., to cover a more diverse range of instances, because instances were withheld or unavailable).  
+  * It contains all possible instances starting from the year 2017 to the present.
 * What data does each instance consist of? “Raw” data (e.g., unprocessed text or images) or features? In either case, please provide a description.   
-* Is there any information missing from individual instances? If so, please provide a description, explaining why this information is missing (e.g., because it was unavailable). This does not include intentionally removed information, but might include redacted text.   
+  * Each instance contains bill data, sponsors, summary, metadata, documents, cosponsors, history, and scrape metadata.
+* Is there any information missing from individual instances? If so, please provide a description, explaining why this information is missing (e.g., because it was unavailable). This does not include intentionally removed information, but might include redacted text.
+  * Some instances are missing sponsors and status information. This information is missing because it was unavailable, either because the status of the bill was not reported or there were no sponsors.   
 * Are there recommended data splits (e.g., training, development/validation, testing)? If so, please provide a description of these splits, explaining the rationale behind them  
+  * There are no recommended data splits.
 * Are there any errors, sources of noise, or redundancies in the dataset? If so, please provide a description.   
+  * Some of the bill text summaries have formatting characters within the text which could be potential sources of noise. Another thing that might pose an issue in the future is that some of the sponsors for the bills are not actual people, rather they are joint committees in the senate or house, which could add difficulty to exploring the relationships between legislators and bills.
 * Is the dataset self-contained, or does it link to or otherwise rely on external resources (e.g., websites, tweets, other datasets)? If it links to or relies on external resources,   
   * Are there guarantees that they will exist, and remain constant, over time;  
   * Are there official archival versions of the complete dataset (i.e., including the external resources as they existed at the time the dataset was created)?  
