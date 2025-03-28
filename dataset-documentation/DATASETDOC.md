@@ -8,8 +8,12 @@
   * https://drive.google.com/drive/folders/1tpqB3-vQwLCt7G42iU9PmEuvdhf6AYaq
 * In your own words, what is this project about? What is the goal of this project?   
 * Who is the client for the project?  
+  * **Russ Wilcox**, CEO of **ArtifexAI**.  
 * Who are the client contacts for the project?  
+ * Email: [russ@artifexai.io](mailto:russ@artifexai.io)
+
 * What class was this project part of?
+  * SPARK – CDS – DS549
 
 ***Dataset Information***
 
@@ -40,22 +44,42 @@
   * There are no recommended data splits.
 * Are there any errors, sources of noise, or redundancies in the dataset? If so, please provide a description.   
   * Some of the bill text summaries have formatting characters within the text which could be potential sources of noise. Another thing that might pose an issue in the future is that some of the sponsors for the bills are not actual people, rather they are joint committees in the senate or house, which could add difficulty to exploring the relationships between legislators and bills.
-* Is the dataset self-contained, or does it link to or otherwise rely on external resources (e.g., websites, tweets, other datasets)? If it links to or relies on external resources,   
-  * Are there guarantees that they will exist, and remain constant, over time;  
-  * Are there official archival versions of the complete dataset (i.e., including the external resources as they existed at the time the dataset was created)?  
-  * Are there any restrictions (e.g., licenses, fees) associated with any of the external resources that might apply to a dataset consumer? Please provide descriptions of all external resources and any restrictions associated with them, as well as links or other access points as appropriate.   
-* Does the dataset contain data that might be considered confidential (e.g., data that is protected by legal privilege or by doctor-patient confidentiality, data that includes the content of individuals’ non-public communications)? If so, please provide a description.   
-* Does the dataset contain data that, if viewed directly, might be offensive, insulting, threatening, or might otherwise cause anxiety? If so, please describe why.   
-* Is it possible to identify individuals (i.e., one or more natural persons), either directly or indirectly (i.e., in combination with other data) from the dataset? If so, please describe how.   
+* Is the dataset self-contained, or does it link to or otherwise rely on external resources (e.g., websites, tweets, other datasets)? If it links to or relies on external resources,
+	 - Bill URLs, e.g., `https://malegislature.gov/Bills/183/SD2780`
+		  - Text view URLs, print preview URLs, download URLs.
+	- **Document storage on AWS S3:** 
+		- Example: `s3://artifex-legislation-documents/state/MA/.../bill_text.pdf`.
+
+	* Are there guarantees that they will exist, and remain constant, over time;
+		- There are **no guarantees** that the external URLs will remain constant or accessible over time. 
+		- Broken or invalid URLs (such as `cc` or `Invalid`) demonstrate potential instability.
+
+	* Are there official archival versions of the complete dataset (i.e., including the external resources as they existed at the time the dataset was created)?
+		* **No**, URLs may change or become inaccessible
+
+	* Are there any restrictions (e.g., licenses, fees) associated with any of the external resources that might apply to a dataset consumer? Please provide descriptions of all external resources and any restrictions associated with them, as well as links or other access points as appropriate.
+		- No specific restrictions or licenses are mentioned for accessing the URLs. However, if AWS S3 documents are privately stored, access may be restricted.
+
+
+* Does the dataset contain data that might be considered confidential (e.g., data that is protected by legal privilege or by doctor-patient confidentiality, data that includes the content of individuals’ non-public communications)? If so, please provide a description.
+	- **No.** The dataset is composed of publicly available legislative bill data and related metadata. It does not contain privileged, personal, or non-public communication data.
+
+* Does the dataset contain data that, if viewed directly, might be offensive, insulting, threatening, or might otherwise cause anxiety? If so, please describe why.
+	- **No.** The dataset primarily consists of legislative documents, summaries, actions, and metadata. It is unlikely to contain offensive or harmful content unless legislative bills themselves contain sensitive topics, which is not explicitly mentioned.
+
+
+
+* Is it possible to identify individuals (i.e., one or more natural persons), either directly or indirectly (i.e., in combination with other data) from the dataset? If so, please describe how.
+	- **Yes.** Legislators (Sponsors and Cosponsors) are directly identifiable by their names. Their names may appear under the `sponsor` and `cosponsors` keys, though in your example data, the `sponsor` name is empty, and the `cosponsors` list is empty.
+  
 * Dataset Snapshot, if there are multiple datasets please include multiple tables for each dataset. 
 
 
-| Size of dataset |  |
+| Size of dataset |  330,2 MB|
 | :---- | :---- |
-| Number of instances |  |
-| Number of fields  |  |
-| Labeled classes |  |
-| Number of labels  |  |
+| Number of instances |  70,641 JSON files |
+| Number of fields  | 18 fields per JSON file |
+
 
 
   
