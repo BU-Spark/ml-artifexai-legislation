@@ -10,7 +10,7 @@
 * Who is the client for the project?  
   * **Russ Wilcox**, CEO of **ArtifexAI**.  
 * Who are the client contacts for the project?  
- * Email: [russ@artifexai.io](mailto:russ@artifexai.io)
+	* Email: [russ@artifexai.io](mailto:russ@artifexai.io)
 
 * What class was this project part of?
   * SPARK – CDS – DS549
