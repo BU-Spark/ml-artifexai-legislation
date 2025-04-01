@@ -34,3 +34,17 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
             data.append(row)
 
     return pd.DataFrame(data)
+
+# EXAMPLE USAGE
+# root_path ='../../downloaded_legislation/'
+# json_files = os.path.join(root_path, 'state/MA/*/*/*/*/*.json') # glob pattern for json files
+
+# fields = {
+#     "bill_url": "bill_data.url",
+#     "title": "bill_data.title",
+#     "text": "summary.text",
+#     "sponsor": "sponsor.name",
+#     "is_home_rule": "is_home_rule"
+# }
+
+# df = load_bill_data(json_files, fields)
