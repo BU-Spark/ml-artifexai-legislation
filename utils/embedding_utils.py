@@ -37,3 +37,12 @@ def extract_embeddings(
         all_embeddings.append(batch_embeddings.numpy())
 
     return np.vstack(all_embeddings)
+
+
+# EXAMPLE USAGE
+# tokenizer = AutoTokenizer.from_pretrained("nlpaueb/legal-bert-base-uncased")
+# model = AutoModel.from_pretrained("nlpaueb/legal-bert-base-uncased")
+
+# embeddings = extract_embeddings(list(df['clean_text']), 
+#                                     tokenizer, 
+#                                     model)
