@@ -3,7 +3,12 @@ import glob
 import pandas as pd
 from typing import Dict, Any
 
-def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.DataFrame:
+# import pandas as pd
+# import glob
+# import json
+# from typing import Dict, Any
+
+def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str], with_outlier: bool = True) -> pd.DataFrame:
     """
     Load bill data from JSON files and extract specified fields.
 
@@ -11,6 +16,7 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
         json_paths (str): Glob pattern to locate JSON files (e.g. 'data/*.json').
         fields_to_extract (dict): Dict where keys are desired DataFrame column names,
                                   and values are dot-paths to JSON fields (e.g. 'bill_data.title').
+        with_outlier (bool): If True, include bills with invalid URLs.
 
     Returns:
         pd.DataFrame: DataFrame containing extracted fields.
@@ -24,16 +30,25 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
         return data
 
     data = []
-    for file in glob.glob(json_paths)[:]:
+    for file in glob.glob(json_paths):
         with open(file, "r") as f:
             bill = json.load(f)
+            
+            if not with_outlier:
+                pdf_url = get_nested_value(bill, 'download_pdf_url')
+                if pdf_url in [None, ""]:
+                    continue  # Skip this bill if 'pdf_url' is missing or empty
+                
+            # Extract the required fields
             row = {
                 column_name: get_nested_value(bill, json_path)
                 for column_name, json_path in fields_to_extract.items()
             }
+            
             data.append(row)
 
     return pd.DataFrame(data)
+
 
 # EXAMPLE USAGE
 # root_path ='../../downloaded_legislation/'
