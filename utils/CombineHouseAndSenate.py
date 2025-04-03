@@ -10,6 +10,7 @@ from utils import load_bill_data
 Extract legislator data from house and senator json files and return it as a combined list
 """
 fields = {
+    "url": "profile_url",
     "First Name": "First Name",
     "Last Name": "Last Name",
     "District": "District",
