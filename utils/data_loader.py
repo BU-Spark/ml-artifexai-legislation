@@ -3,16 +3,12 @@ import glob
 import pandas as pd
 from typing import Dict, Any
 
-<<<<<<< HEAD
 # import pandas as pd
 # import glob
 # import json
 # from typing import Dict, Any
 
 def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str], with_outlier: bool = True) -> pd.DataFrame:
-=======
-def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.DataFrame:
->>>>>>> origin/dev-jasper
     """
     Load bill data from JSON files and extract specified fields.
 
@@ -20,10 +16,7 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
         json_paths (str): Glob pattern to locate JSON files (e.g. 'data/*.json').
         fields_to_extract (dict): Dict where keys are desired DataFrame column names,
                                   and values are dot-paths to JSON fields (e.g. 'bill_data.title').
-<<<<<<< HEAD
         with_outlier (bool): If True, include bills with invalid URLs.
-=======
->>>>>>> origin/dev-jasper
 
     Returns:
         pd.DataFrame: DataFrame containing extracted fields.
@@ -37,7 +30,6 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
         return data
 
     data = []
-<<<<<<< HEAD
     for file in glob.glob(json_paths):
         with open(file, "r") as f:
             bill = json.load(f)
@@ -48,27 +40,17 @@ def load_bill_data(json_paths: str, fields_to_extract: Dict[str, str]) -> pd.Dat
                     continue  # Skip this bill if 'pdf_url' is missing or empty
                 
             # Extract the required fields
-=======
-    for file in glob.glob(json_paths)[:]:
-        with open(file, "r") as f:
-            bill = json.load(f)
->>>>>>> origin/dev-jasper
             row = {
                 column_name: get_nested_value(bill, json_path)
                 for column_name, json_path in fields_to_extract.items()
             }
-<<<<<<< HEAD
+            row['path'] = file
             
-=======
->>>>>>> origin/dev-jasper
             data.append(row)
 
     return pd.DataFrame(data)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/dev-jasper
 # EXAMPLE USAGE
 # root_path ='../../downloaded_legislation/'
 # json_files = os.path.join(root_path, 'state/MA/*/*/*/*/*.json') # glob pattern for json files
