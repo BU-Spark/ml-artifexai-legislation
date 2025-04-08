@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import re
+
 
 from scipy.stats import normaltest, kstest, anderson
 def detect_outliers_iqr(series: pd.Series, multiplier: float = 1.5) -> pd.Series:
@@ -63,3 +65,15 @@ def check_normality(series):
         print("\n✅ Data is likely normally distributed.")
 
 
+def split_url(url):
+    # Updated pattern to handle Legislator URLs with special characters like %20
+    pattern = r"(https:\/\/malegislature\.gov\/(?:Legislators\/Profile\/[\w%]+|Committees\/Detail\/[\w%]+))(\/\d+.*)"
+    
+    match = re.match(pattern, url)
+    
+    try:
+        base_url = match.group(1)
+        rest_of_url = match.group(2)
+        return base_url, rest_of_url
+    except AttributeError:
+        return print("No match found for the URL:", url)
