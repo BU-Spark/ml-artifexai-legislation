@@ -32,7 +32,7 @@ class LegislatorNode(Node):
         self.committee_ids = committee_ids
 
 class TopicNode():
-    def __init__(self, id):
+    def __init__(self, id, topic_id):
         self.id = id
 
 
