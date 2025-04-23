@@ -6,10 +6,10 @@ import numpy as np
 from typing import List
 
 def extract_embeddings(
-    texts: List[str],
-    tokenizer: PreTrainedTokenizer,
-    model: PreTrainedModel,
-    batch_size: int = 16
+    texts,
+    tokenizer,
+    model,
+    batch_size: int = 64
 ) -> np.ndarray:
     """
     Generate dense vector embeddings for a list of texts using a Hugging Face transformer model.
@@ -23,18 +23,21 @@ def extract_embeddings(
     Returns:
         np.ndarray: 2D array of shape (num_texts, embedding_dim) containing text embeddings.
     """
-    all_embeddings = []
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
     model.eval()
     
+    all_embeddings = []
+
     for i in range(0, len(texts), batch_size):
         batch = texts[i:i + batch_size]
-        inputs = tokenizer(batch, padding=True, truncation=True, return_tensors="pt")
-        
+        inputs = tokenizer(batch, padding=True, truncation=True, return_tensors="pt").to(device)
+
         with torch.no_grad():
             outputs = model(**inputs)
-            batch_embeddings = outputs.last_hidden_state.mean(dim=1)  # [batch_size, hidden_dim]
-        
-        all_embeddings.append(batch_embeddings.numpy())
+            batch_embeddings = outputs.last_hidden_state.mean(dim=1).cpu().numpy()
+
+        all_embeddings.append(batch_embeddings)
 
     return np.vstack(all_embeddings)
 
