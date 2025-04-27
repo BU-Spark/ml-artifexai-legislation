@@ -6,6 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 full_corrected_data.csv
 final_bill_data.csv
+# corrected_data.csv
  __pycache__/
 *.pyc
  __pycache__/
