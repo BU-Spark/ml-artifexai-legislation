@@ -5,7 +5,7 @@ class Node:
 
 
 class BillNode(Node):
-    def __init__(self, id, bill_number, bill_url, bill_title, bill_text, bill_sponsor, bill_sponsor_url, bill_view_text_url, bill_download_pdf_url, bill_is_home_rule, bill_municipality, bill_num_cosponsors, bill_cosponsors, bill_history, bill_path, topic  ):
+    def __init__(self, id, bill_number, bill_url, bill_title, bill_text, bill_sponsor, bill_sponsor_url, bill_view_text_url, bill_download_pdf_url, bill_is_home_rule, bill_municipality, bill_num_cosponsors, bill_cosponsors, bill_history, bill_path, topic_id  ):
         super().__init__(id, bill_url)
         self.number = bill_number
         self.title = bill_title
@@ -20,7 +20,7 @@ class BillNode(Node):
         self.cosponsors = bill_cosponsors
         self.history = bill_history
         self.path = bill_path
-        self.topic = topic
+        self.topic_id = topic_id
 
 class LegislatorNode(Node):
     def __init__(self, id, url, first, last, district, party, committee_ids):
@@ -32,8 +32,10 @@ class LegislatorNode(Node):
         self.committee_ids = committee_ids
 
 class TopicNode():
-    def __init__(self, id, topic_id):
+    def __init__(self, id, topic_id, topic_name):
         self.id = id
+        self.topic_id = topic_id
+        self.topic_name = topic_name
 
 
 class CustomGraph:
@@ -57,8 +59,12 @@ class CustomGraph:
 
     def get_bill(self, billID):
         return self.bill_nodes[billID]
+    
     def get_legislator(self, legID):
         return self.legislator_nodes[legID]
+    
+    def get_topic(self, topicID):
+        return self.topic_nodes[topicID]
         
 
 
