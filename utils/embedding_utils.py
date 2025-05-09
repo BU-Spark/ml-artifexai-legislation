@@ -1,51 +1,59 @@
 
 import torch
-from transformers import PreTrainedTokenizer, PreTrainedModel
+# from transformers import PreTrainedTokenizer, PreTrainedModel
 import numpy as np
+import pandas as pd
 
-from typing import List
+from typing import List, Tuple
+import spacy
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sentence_transformers import SentenceTransformer
 
-def extract_embeddings(
-    texts,
-    tokenizer,
-    model,
-    batch_size: int = 64
-) -> np.ndarray:
-    """
-    Generate dense vector embeddings for a list of texts using a Hugging Face transformer model.
+nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
+custom_stopwords = set([
+    "section", "chapter", "general", "laws", "hereby", "amended", "insert", "enact",
+    "enactment", "law", "legislation", "act", "resolve", "order", "committee", "bill",
+    "house", "senate", "commonwealth", "public", "private", "regulation", "statute",
+    "effective", "provision", "subsection", "notwithstanding", "pursuant", "authorized",
+    "office", "duty", "power", "authority", "text", "available", "clerk", "authorized",
+    "recess", "investigation", "study", "authorized", "sitting", "office", "provide",
+    "shall",  "state", "amend", "official", "edition", 
+    "insert", "follow", "paragraph", "clause", "department", "relative",
+    "massachusetts", "submit", "", "establish",
+        "leave",     # very common, ambiguous
+    "sick",      # procedural in employee/sick leave laws
+    "employee",  # generic term across labor bills
+    "fiscal",    # procedural, not topically defining
+    "year",      # always present in budget/timing
+    "commission",# too procedural, like “committee”
+    "inspection",# structural
+    "item",      # budget structure
+    "county",    # geographical, not thematic
+    "trust"      # legal term, often in estate/tax docs
+])
 
-    Args:
-        texts (List[str]): List of input texts to embed.
-        tokenizer (PreTrainedTokenizer): Tokenizer corresponding to the transformer model.
-        model (PreTrainedModel): Pretrained transformer model (e.g., Legal-BERT).
-        batch_size (int): Number of texts to process in each batch (default: 16).
+stopwords = ENGLISH_STOP_WORDS.union(custom_stopwords)
+stopwords = set(stopwords)
+stopwords = stopwords.difference({"fire", "children", "study", "family", "order", "regulation"})
 
-    Returns:
-        np.ndarray: 2D array of shape (num_texts, embedding_dim) containing text embeddings.
-    """
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-    model.eval()
-    
-    all_embeddings = []
+def clean_text(text: str)-> str:
+    if pd.isnull(text):
+        return np.nan
+    doc = nlp(text.lower())
+    tokens = [
+        token.lemma_ for token in doc
+        if token.is_alpha and not token.is_stop and token.lemma_ not in stopwords
+    ]
+    cleaned = " ".join(tokens)
+    if cleaned == "":
+        return np.nan
+    return " ".join(tokens)
 
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i:i + batch_size]
-        inputs = tokenizer(batch, padding=True, truncation=True, return_tensors="pt").to(device)
+def extract_embeddings(df: pd.DataFrame, text_col_name:str)->Tuple[List, pd.DataFrame]:
+    df["cleaned"] = df[text_col_name].apply(clean_text)
+    df.cleaned = df.cleaned.fillna('further amend or relative to other act')
 
-        with torch.no_grad():
-            outputs = model(**inputs)
-            batch_embeddings = outputs.last_hidden_state.mean(dim=1).cpu().numpy()
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    embeddings = model.encode(df.cleaned.values, show_progress_bar=True)
 
-        all_embeddings.append(batch_embeddings)
-
-    return np.vstack(all_embeddings)
-
-
-# EXAMPLE USAGE
-# tokenizer = AutoTokenizer.from_pretrained("nlpaueb/legal-bert-base-uncased")
-# model = AutoModel.from_pretrained("nlpaueb/legal-bert-base-uncased")
-
-# embeddings = extract_embeddings(list(df['clean_text']), 
-#                                     tokenizer, 
-#                                     model)
+    return embeddings, df
