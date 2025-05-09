@@ -32,7 +32,6 @@ def get_dataframe(folder_path, fields_to_extract):
                         column_name: get_nested_value(bill, json_path)
                         for column_name, json_path in fields_to_extract.items()
                     }
-                    # row['path'] = filepath
                     # print(fields_to_extract.items())
                     # print(row)
                     contents.append(row)
