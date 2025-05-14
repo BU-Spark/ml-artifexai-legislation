@@ -41,7 +41,7 @@ class TopicNode():
 class CustomGraph:
     def __init__(self):
         self.bill_nodes = {}         # bill_id -> BillNode
-        self.legislator_nodes = {}   # legislator_name -> LegislatorNode
+        self.legislator_nodes = {}   # legislator_id -> LegislatorNode
         self.topic_nodes = {}        # topic_id -> TopicNode
         self.edges = []              # list of (src_id, dst_id, relation_type)
 
