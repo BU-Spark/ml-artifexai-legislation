@@ -1,0 +1,460 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 800px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"font": {"color": "white"}, "group": 4, "id": "453", "label": "Bill 453", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing and branch library space in the Chinatown section of the City of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "545", "label": "Affordable Housing \u0026 Homelessness,4", "shape": "dot", "size": 10, "title": "Affordable Housing \u0026 Homelessness", "type": "Topic"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "95", "label": "Legislator 95", "shape": "dot", "size": 10, "title": "Aaron Michlewitz, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "512", "label": "Bill 512", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for admission into the police academy for Luigi D\u0027Addieco", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "20", "label": "Legislator 20", "shape": "dot", "size": 10, "title": "Rob Consalvo, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "547", "label": "Emergency Services \u0026 Municipal Hiring,16", "shape": "dot", "size": 10, "title": "Emergency Services \u0026 Municipal Hiring", "type": "Topic"}, {"font": {"color": "white"}, "group": 19, "id": "513", "label": "Bill 513", "shape": "dot", "size": 10, "title": "An Act relative to district city council election in the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "123", "label": "Legislator 123", "shape": "dot", "size": 10, "title": "Daniel Ryan, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 19, "id": "552", "label": "Town Elections \u0026 Local Governance,19", "shape": "dot", "size": 10, "title": "Town Elections \u0026 Local Governance", "type": "Topic"}, {"font": {"color": "white"}, "group": 16, "id": "514", "label": "Bill 514", "shape": "dot", "size": 10, "title": "An Act directing the City of Boston Police Department to waive the maximum age requirement for police officers for Wilfrid Decossa", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "41", "label": "Legislator 41", "shape": "dot", "size": 10, "title": "Brandy Fluker-Reid, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "515", "label": "Bill 515", "shape": "dot", "size": 10, "title": "An Act to amend the training requirement for the fire department cadet program in Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "155", "label": "Legislator 155", "shape": "dot", "size": 10, "title": "Christopher Worrell, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "516", "label": "Bill 516", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Elsie Barbosa", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "517", "label": "Bill 517", "shape": "dot", "size": 10, "title": "An Act to restore Boston\u2019s governmentally-involved housing", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "97", "label": "Legislator 97", "shape": "dot", "size": 10, "title": "Samantha Monta\u00f1o, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "64", "label": "Legislator 64", "shape": "dot", "size": 10, "title": "Vanna Howard, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "173", "label": "Legislator 173", "shape": "dot", "size": 10, "title": "Lydia Edwards, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "518", "label": "Bill 518", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Nuias Daveiga", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "519", "label": "Bill 519", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Richard Lopez", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "548", "label": "Retirement \u0026 Pensions,15", "shape": "dot", "size": 10, "title": "Retirement \u0026 Pensions", "type": "Topic"}, {"font": {"color": "white"}, "group": 19, "id": "520", "label": "Bill 520", "shape": "dot", "size": 10, "title": "An Act enhancing the Historic Beacon Hill District", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "81", "label": "Legislator 81", "shape": "dot", "size": 10, "title": "Jay Livingstone, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "521", "label": "Bill 521", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Keny Gateau", "type": "bill"}, {"font": {"color": "white"}, "group": 10, "id": "522", "label": "Bill 522", "shape": "dot", "size": 10, "title": "authorizing the Licensing Board of the city of Boston to grant restricted airport licenses for the sale of all alcoholic beverages and for the sale o...", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "343", "label": "Legislator 343", "shape": "dot", "size": 10, "title": "Carlo Basile, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 10, "id": "553", "label": "Alcohol Licensing \u0026 Sales,10", "shape": "dot", "size": 10, "title": "Alcohol Licensing \u0026 Sales", "type": "Topic"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "248", "label": "Legislator 248", "shape": "dot", "size": 10, "title": "Anthony W. Petruccelli, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 4, "id": "523", "label": "Bill 523", "shape": "dot", "size": 10, "title": "AN ACT RELATIVE TO A FORM OF GOVERNANCE FOR THE BOSTON HOUSING AUTHORITY", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "62", "label": "Legislator 62", "shape": "dot", "size": 10, "title": "Kevin Honan, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 18, "id": "524", "label": "Bill 524", "shape": "dot", "size": 10, "title": "PETITION FOR A SPECIAL LAW RE: THE PROCUREMENT AND AWARD OF CONTRACTS FOR CERTAIN AFFORDABLE HOUSING IN THE CITY OF BOSTON", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "549", "label": "Public Land \u0026 City Property Management,18", "shape": "dot", "size": 10, "title": "Public Land \u0026 City Property Management", "type": "Topic"}, {"font": {"color": "white"}, "group": 1, "id": "525", "label": "Bill 525", "shape": "dot", "size": 10, "title": "An Act Relative To The Compulsory Age Of School Attendance", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "250", "label": "Legislator 250", "shape": "dot", "size": 10, "title": "Edward F. Coppinger, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "231", "label": "Legislator 231", "shape": "dot", "size": 10, "title": "Elizabeth A. Malia, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "285", "label": "Legislator 285", "shape": "dot", "size": 10, "title": "Byron Rushing, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "169", "label": "Legislator 169", "shape": "dot", "size": 10, "title": "Sal DiDomenico, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "233", "label": "Legislator 233", "shape": "dot", "size": 10, "title": "Nick Collins, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "337", "label": "Legislator 337", "shape": "dot", "size": 10, "title": "Linda Dorcena Forry, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "391", "label": "Legislator 391", "shape": "dot", "size": 10, "title": "Carlos Henriquez, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "244", "label": "Legislator 244", "shape": "dot", "size": 10, "title": "Martin J. Walsh, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 1, "id": "555", "label": "Education \u0026 Schools,1", "shape": "dot", "size": 10, "title": "Education \u0026 Schools", "type": "Topic"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "61", "label": "Legislator 61", "shape": "dot", "size": 10, "title": "Russell Holmes, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "196", "label": "Legislator 196", "shape": "dot", "size": 10, "title": "Michael Rush, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 10, "id": "526", "label": "Bill 526", "shape": "dot", "size": 10, "title": "An Act relative to a liquor license for the Irish Social Club, Inc, in the City of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "527", "label": "Bill 527", "shape": "dot", "size": 10, "title": "An Act to facilitate mediation of mortgage foreclosures of owner occupied residential real property in the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "283", "label": "Legislator 283", "shape": "dot", "size": 10, "title": "Martha M. Walz, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "297", "label": "Legislator 297", "shape": "dot", "size": 10, "title": "Jeffrey S\u00e1nchez, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "528", "label": "Bill 528", "shape": "dot", "size": 10, "title": "An Act authorizing the Boston Fire Department to train and certify fire service personnel in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 19, "id": "529", "label": "Bill 529", "shape": "dot", "size": 10, "title": "An Act repealing the sunset clause for the preparation of certain ballots in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "530", "label": "Bill 530", "shape": "dot", "size": 10, "title": "An Act further regulating the Boston Art Commission", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "213", "label": "Legislator 213", "shape": "dot", "size": 10, "title": "Angelo M. Scaccia, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 4, "id": "531", "label": "Bill 531", "shape": "dot", "size": 10, "title": "An Act to restore Boston\u2019s governmentally-involved housing protection", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "532", "label": "Bill 532", "shape": "dot", "size": 10, "title": "An Act further regulating redevelopment in the Roxbury section of the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "226", "label": "Legislator 226", "shape": "dot", "size": 10, "title": "Sonia Chang-Diaz, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "313", "label": "Legislator 313", "shape": "dot", "size": 10, "title": "Gloria L. Fox, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 18, "id": "535", "label": "Bill 535", "shape": "dot", "size": 10, "title": "An Act relative to the street closure permitting process in the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "162", "label": "Legislator 162", "shape": "dot", "size": 10, "title": "William Brownsberger, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "536", "label": "Bill 536", "shape": "dot", "size": 10, "title": "An Act directing the Police Department of the city of Boston to waive the maximum age requirement for police officers for Robert J. Butts, III", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "310", "label": "Legislator 310", "shape": "dot", "size": 10, "title": "Linda Dorcena Forry, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "66", "label": "Legislator 66", "shape": "dot", "size": 10, "title": "Daniel Hunt, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "354", "label": "Legislator 354", "shape": "dot", "size": 10, "title": "Daniel Cullinane, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 18, "id": "537", "label": "Bill 537", "shape": "dot", "size": 10, "title": "An Act concerning long-term homeowners in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "538", "label": "Bill 538", "shape": "dot", "size": 10, "title": "An Act regarding the composition of the Boston Arts Commission", "type": "bill"}, {"font": {"color": "white"}, "group": 7, "id": "539", "label": "Bill 539", "shape": "dot", "size": 10, "title": "An Act protecting sunlight and promoting economic development in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 7, "id": "556", "label": "Environmental Resources \u0026 Utilities,7", "shape": "dot", "size": 10, "title": "Environmental Resources \u0026 Utilities", "type": "Topic"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "235", "label": "Legislator 235", "shape": "dot", "size": 10, "title": "Joseph A. Boncore, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 1, "id": "540", "label": "Bill 540", "shape": "dot", "size": 10, "title": "An Act relative to expanding access to high quality early education in Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "541", "label": "Bill 541", "shape": "dot", "size": 10, "title": "An Act promoting homelessness prevention in Massachusetts", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "143", "label": "Legislator 143", "shape": "dot", "size": 10, "title": "Chynah Tyler, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "19", "label": "Legislator 19", "shape": "dot", "size": 10, "title": "Mike Connolly, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "168", "label": "Legislator 168", "shape": "dot", "size": 10, "title": "Julian Cyr, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "174", "label": "Legislator 174", "shape": "dot", "size": 10, "title": "James Eldridge, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "52", "label": "Legislator 52", "shape": "dot", "size": 10, "title": "Carlos Gonz\u00e1lez, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "238", "label": "Legislator 238", "shape": "dot", "size": 10, "title": "Paul Heroux, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "59", "label": "Legislator 59", "shape": "dot", "size": 10, "title": "Natalie Higgins, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "71", "label": "Legislator 71", "shape": "dot", "size": 10, "title": "Mary Keefe, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "203", "label": "Legislator 203", "shape": "dot", "size": 10, "title": "Kay Khan, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "78", "label": "Legislator 78", "shape": "dot", "size": 10, "title": "Jack Lewis, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "185", "label": "Legislator 185", "shape": "dot", "size": 10, "title": "Jason Lewis, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "230", "label": "Legislator 230", "shape": "dot", "size": 10, "title": "Denise Provost, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "153", "label": "Legislator 153", "shape": "dot", "size": 10, "title": "Bud Williams, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 18, "id": "542", "label": "Bill 542", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the East Boston section of the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "85", "label": "Legislator 85", "shape": "dot", "size": 10, "title": "Adrian Madaro, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 7, "id": "543", "label": "Bill 543", "shape": "dot", "size": 10, "title": "An Act authorizing the Economic Development and Industrial Corporation of Boston to qualify a single energy service company for the design, construct...", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "544", "label": "Bill 544", "shape": "dot", "size": 10, "title": "An Act directing the police department of the city of Boston to waive the maximum age requirement for police officers for James Anthony Verderico, Jr", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "533", "label": "Bill 533", "shape": "dot", "size": 10, "title": "An Act relative to the retirement classification of Boston school police officers", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "534", "label": "Bill 534", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 2, "id": "454", "label": "Bill 454", "shape": "dot", "size": 10, "title": "An Act relative to Chapter 30B: Uniform Procurement Act", "type": "bill"}, {"font": {"color": "white"}, "group": 2, "id": "546", "label": "Labor, Employment \u0026 Economic Growth,2", "shape": "dot", "size": 10, "title": "Labor, Employment \u0026 Economic Growth", "type": "Topic"}, {"font": {"color": "white"}, "group": 16, "id": "455", "label": "Bill 455", "shape": "dot", "size": 10, "title": "An Act regarding preference for Boston high school graduates for the position of police officer in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "456", "label": "Bill 456", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Elaina McAlister", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "457", "label": "Bill 457", "shape": "dot", "size": 10, "title": "An Act authorizing the city of Boston to establish an alternative superannuation retirement benefit program", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "344", "label": "Legislator 344", "shape": "dot", "size": 10, "title": "Nika C. Elugardo, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "319", "label": "Legislator 319", "shape": "dot", "size": 10, "title": "Jon Santiago, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "341", "label": "Legislator 341", "shape": "dot", "size": 10, "title": "Liz Miranda, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "136", "label": "Legislator 136", "shape": "dot", "size": 10, "title": "Thomas Stanley, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "103", "label": "Legislator 103", "shape": "dot", "size": 10, "title": "Brian Murray, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "145", "label": "Legislator 145", "shape": "dot", "size": 10, "title": "Erika Uyterhoeven, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "92", "label": "Legislator 92", "shape": "dot", "size": 10, "title": "Paul McMurtry, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "321", "label": "Legislator 321", "shape": "dot", "size": 10, "title": "Peter Capano, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "224", "label": "Legislator 224", "shape": "dot", "size": 10, "title": "Walter F. Timilty, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "104", "label": "Legislator 104", "shape": "dot", "size": 10, "title": "Tram Nguyen, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "50", "label": "Legislator 50", "shape": "dot", "size": 10, "title": "Jessica Giannino, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 16, "id": "458", "label": "Bill 458", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Daniel Flores", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "459", "label": "Bill 459", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Terry Cotton", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "460", "label": "Bill 460", "shape": "dot", "size": 10, "title": "An Act to restore Boston\u0027s governmentally-involved housing protection", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "461", "label": "Bill 461", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the Jamaica Plain section of the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "462", "label": "Bill 462", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Richard Cintolo", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "163", "label": "Legislator 163", "shape": "dot", "size": 10, "title": "Nick Collins, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 15, "id": "463", "label": "Bill 463", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Matthew Morris", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "464", "label": "Bill 464", "shape": "dot", "size": 10, "title": "An Act authorizing the city of Boston to fund affordable housing through a fee on certain real estate transfers", "type": "bill"}, {"font": {"color": "white"}, "group": 6, "id": "465", "label": "Bill 465", "shape": "dot", "size": 10, "title": "An Act relative to the Zoning Board of Appeal", "type": "bill"}, {"font": {"color": "white"}, "group": 6, "id": "550", "label": "Child Protection \u0026 Criminal Justice,6", "shape": "dot", "size": 10, "title": "Child Protection \u0026 Criminal Justice", "type": "Topic"}, {"font": {"color": "white"}, "group": 15, "id": "466", "label": "Bill 466", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Ryan Lenane", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "467", "label": "Bill 467", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension for Scott O\u0027Brien", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "468", "label": "Bill 468", "shape": "dot", "size": 10, "title": "An Act regarding the disability pension of Harry Jean", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "469", "label": "Bill 469", "shape": "dot", "size": 10, "title": "An Act to provide residency preference for the Boston Police Department and the Boston Fire Department", "type": "bill"}, {"font": {"color": "white"}, "group": 9, "id": "470", "label": "Bill 470", "shape": "dot", "size": 10, "title": "An Act relative to real estate transfer fees and senior property tax relief", "type": "bill"}, {"font": {"color": "white"}, "group": 9, "id": "551", "label": "Veterans \u0026 Tax Policy,9", "shape": "dot", "size": 10, "title": "Veterans \u0026 Tax Policy", "type": "Topic"}, {"font": {"color": "white"}, "group": 15, "id": "471", "label": "Bill 471", "shape": "dot", "size": 10, "title": "An Act relative to boston school police retirement", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "472", "label": "Bill 472", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the South Boston section of the city of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "10", "label": "Legislator 10", "shape": "dot", "size": 10, "title": "David Biele, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 19, "id": "473", "label": "Bill 473", "shape": "dot", "size": 10, "title": "An Act relative to election procedures in the City of Boston", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "100", "label": "Legislator 100", "shape": "dot", "size": 10, "title": "Michael Moran, Democrat", "type": "legislator"}, {"font": {"color": "white"}, "group": 10, "id": "474", "label": "Bill 474", "shape": "dot", "size": 10, "title": "An Act authorizing additional licenses for the sale of alcoholic beverages to be drunk on the premises in Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "475", "label": "Bill 475", "shape": "dot", "size": 10, "title": "An Act to create a Boston Fire Department cadet program", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "476", "label": "Bill 476", "shape": "dot", "size": 10, "title": "An Act to create a Boston Fire Department Cadet Program", "type": "bill"}, {"font": {"color": "white"}, "group": 6, "id": "477", "label": "Bill 477", "shape": "dot", "size": 10, "title": "An Act providing for concurrent jurisdiction at certain Massachusetts Port Authority properties", "type": "bill"}, {"font": {"color": "white"}, "group": 10, "id": "478", "label": "Bill 478", "shape": "dot", "size": 10, "title": "An Act authorizing the city of Boston to grant one additional license for the sale of alcoholic beverages to be drunk on the premises", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "479", "label": "Bill 479", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the Charlestown section of the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "480", "label": "Bill 480", "shape": "dot", "size": 10, "title": "An Act authorizing the city of Boston to limit buildings according to their use or construction to specified districts", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "481", "label": "Bill 481", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the Brighton section of the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "482", "label": "Bill 482", "shape": "dot", "size": 10, "title": "An Act relative to certain affordable housing in the South End section of the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "483", "label": "Bill 483", "shape": "dot", "size": 10, "title": "An Act relative to Boston school police retirement", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "246", "label": "Legislator 246", "shape": "dot", "size": 10, "title": "Timothy R. Whelan, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 19, "id": "484", "label": "Bill 484", "shape": "dot", "size": 10, "title": "An Act regarding the terms of office for city councillors", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "485", "label": "Bill 485", "shape": "dot", "size": 10, "title": "An Act directing the City of Boston Police Department to waive the maximum age requirement for police officers for Daryle Lamonica", "type": "bill"}, {"font": {"color": "white"}, "group": 19, "id": "486", "label": "Bill 486", "shape": "dot", "size": 10, "title": "An Act authorizing the City of Boston to offer early voting in municipal elections", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "487", "label": "Bill 487", "shape": "dot", "size": 10, "title": "An Act relative to the licensing board for the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 19, "id": "488", "label": "Bill 488", "shape": "dot", "size": 10, "title": "An Act to establish election day registration", "type": "bill"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "241", "label": "Legislator 241", "shape": "dot", "size": 10, "title": "Jennifer E. Benson, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "295", "label": "Legislator 295", "shape": "dot", "size": 10, "title": "Cheryl A. Coakley-Rivera, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "330", "label": "Legislator 330", "shape": "dot", "size": 10, "title": "Cory Atkins, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "35", "label": "Legislator 35", "shape": "dot", "size": 10, "title": "Tricia Farley-Bouvier, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "381", "label": "Legislator 381", "shape": "dot", "size": 10, "title": "Denise Andrews, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "331", "label": "Legislator 331", "shape": "dot", "size": 10, "title": "Carl M. Sciortino, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "260", "label": "Legislator 260", "shape": "dot", "size": 10, "title": "Peter V. Kocot, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "276", "label": "Legislator 276", "shape": "dot", "size": 10, "title": "Jonathan Hecht, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "217", "label": "Legislator 217", "shape": "dot", "size": 10, "title": "Ruth B. Balser, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "268", "label": "Legislator 268", "shape": "dot", "size": 10, "title": "Jay R. Kaufman, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "240", "label": "Legislator 240", "shape": "dot", "size": 10, "title": "Tom Sannicandro, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "273", "label": "Legislator 273", "shape": "dot", "size": 10, "title": "Benjamin Swan, nan", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "120", "label": "Legislator 120", "shape": "dot", "size": 10, "title": "David Rogers, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "25", "label": "Legislator 25", "shape": "dot", "size": 10, "title": "Marjorie Decker, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "105", "label": "Legislator 105", "shape": "dot", "size": 10, "title": "James O\u0027Day, Democrat", "type": "legislator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "345", "label": "Legislator 345", "shape": "dot", "size": 10, "title": "Thomas P. Conroy, nan", "type": "legislator"}, {"font": {"color": "white"}, "group": 19, "id": "489", "label": "Bill 489", "shape": "dot", "size": 10, "title": "An Act relative to the preparation of certain bilingual ballots in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "490", "label": "Bill 490", "shape": "dot", "size": 10, "title": "An Act establishing a special events fund in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 10, "id": "491", "label": "Bill 491", "shape": "dot", "size": 10, "title": "An Act relative to certain licenses for the sale of alchoholic beverages in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 13, "id": "492", "label": "Bill 492", "shape": "dot", "size": 10, "title": "An Act establishing a sick leave bank for Dwight Melvin Seams, an employee of the Trial Court", "type": "bill"}, {"font": {"color": "white"}, "group": 13, "id": "554", "label": "Human Services \u0026 Court Systems,13", "shape": "dot", "size": 10, "title": "Human Services \u0026 Court Systems", "type": "Topic"}, {"font": {"color": "white"}, "group": 15, "id": "493", "label": "Bill 493", "shape": "dot", "size": 10, "title": "An Act relative to retired Boston police officers", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "494", "label": "Bill 494", "shape": "dot", "size": 10, "title": "An Act relative to the powers of the Boston Housing Commission", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "495", "label": "Bill 495", "shape": "dot", "size": 10, "title": "An Act relative to changing the name of the State-Boston Retirement System to the Boston Retirement system", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "496", "label": "Bill 496", "shape": "dot", "size": 10, "title": "An Act authorizing the Division of Capital Asset Management and Maintenance to lease a certain parcel of land in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "497", "label": "Bill 497", "shape": "dot", "size": 10, "title": "An Act concerning long-term homeowners", "type": "bill"}, {"font": {"color": "white"}, "group": 10, "id": "498", "label": "Bill 498", "shape": "dot", "size": 10, "title": "An Act authorizing the city of Boston to grant 6 additional licenses for the sale of all alcoholic beverages to be drunk on the premises", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "499", "label": "Bill 499", "shape": "dot", "size": 10, "title": "An Act relative to property tax classification in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "500", "label": "Bill 500", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Jean E. Roseney", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "501", "label": "Bill 501", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Alex Guzman", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "502", "label": "Bill 502", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston police department to waive the maximum age requirement for police officers for Wendy Pierre-Louis", "type": "bill"}, {"font": {"color": "white"}, "group": 15, "id": "503", "label": "Bill 503", "shape": "dot", "size": 10, "title": "An Act providing certain death benefits for the widow of a former firefighter of the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "504", "label": "Bill 504", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Adam Watt", "type": "bill"}, {"font": {"color": "white"}, "group": 18, "id": "505", "label": "Bill 505", "shape": "dot", "size": 10, "title": "An Act to improve and modernize planning and community development in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "506", "label": "Bill 506", "shape": "dot", "size": 10, "title": "An Act directing the city of Boston Police Department to waive the maximum age requirement for police officers for Max Handerson", "type": "bill"}, {"font": {"color": "white"}, "group": 6, "id": "507", "label": "Bill 507", "shape": "dot", "size": 10, "title": "An Act increasing the maximum amount of fines which may be imposed for violations of ordinances in the city of Boston", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "508", "label": "Bill 508", "shape": "dot", "size": 10, "title": "An Act directing the City of Boston Police Department to waive the maximum age requirement for police officers for Terrance Joseph Williams", "type": "bill"}, {"font": {"color": "white"}, "group": 4, "id": "509", "label": "Bill 509", "shape": "dot", "size": 10, "title": "An Act relative to the expansion of a branch of the Boston Public Library within an affordable housing development in the West End Neighborhood of th...", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "510", "label": "Bill 510", "shape": "dot", "size": 10, "title": "An Act directing the City of Boston Police Department to waive the maximum age requirement for police officers for Paul O\u0027Brien", "type": "bill"}, {"font": {"color": "white"}, "group": 16, "id": "511", "label": "Bill 511", "shape": "dot", "size": 10, "title": "An Act directing the City of Boston Police Department to waive the maximum age requirement for Pierre Charles Darius of Mattapan", "type": "bill"}]);
+                  edges = new vis.DataSet([{"from": "453", "label": "topic", "to": "545", "width": 1}, {"from": "453", "label": "sponsor", "to": "95", "width": 1}, {"from": "512", "label": "sponsor", "to": "20", "width": 1}, {"from": "512", "label": "topic", "to": "547", "width": 1}, {"from": "513", "label": "sponsor", "to": "123", "width": 1}, {"from": "513", "label": "topic", "to": "552", "width": 1}, {"from": "514", "label": "sponsor", "to": "41", "width": 1}, {"from": "514", "label": "topic", "to": "547", "width": 1}, {"from": "515", "label": "topic", "to": "547", "width": 1}, {"from": "515", "label": "sponsor", "to": "155", "width": 1}, {"from": "516", "label": "topic", "to": "547", "width": 1}, {"from": "516", "label": "sponsor", "to": "155", "width": 1}, {"from": "517", "label": "topic", "to": "545", "width": 1}, {"from": "517", "label": "sponsor", "to": "97", "width": 1}, {"from": "517", "label": "cosponsor", "to": "20", "width": 1}, {"from": "517", "label": "cosponsor", "to": "64", "width": 1}, {"from": "517", "label": "cosponsor", "to": "173", "width": 1}, {"from": "518", "label": "topic", "to": "547", "width": 1}, {"from": "518", "label": "sponsor", "to": "155", "width": 1}, {"from": "519", "label": "sponsor", "to": "20", "width": 1}, {"from": "519", "label": "topic", "to": "548", "width": 1}, {"from": "520", "label": "sponsor", "to": "81", "width": 1}, {"from": "520", "label": "topic", "to": "552", "width": 1}, {"from": "521", "label": "sponsor", "to": "41", "width": 1}, {"from": "521", "label": "topic", "to": "547", "width": 1}, {"from": "522", "label": "sponsor", "to": "343", "width": 1}, {"from": "522", "label": "topic", "to": "553", "width": 1}, {"from": "522", "label": "cosponsor", "to": "248", "width": 1}, {"from": "523", "label": "topic", "to": "545", "width": 1}, {"from": "523", "label": "sponsor", "to": "62", "width": 1}, {"from": "524", "label": "topic", "to": "549", "width": 1}, {"from": "525", "label": "cosponsor", "to": "250", "width": 1}, {"from": "525", "label": "cosponsor", "to": "231", "width": 1}, {"from": "525", "label": "cosponsor", "to": "285", "width": 1}, {"from": "525", "label": "cosponsor", "to": "343", "width": 1}, {"from": "525", "label": "cosponsor", "to": "169", "width": 1}, {"from": "525", "label": "cosponsor", "to": "233", "width": 1}, {"from": "525", "label": "cosponsor", "to": "337", "width": 1}, {"from": "525", "label": "sponsor", "to": "391", "width": 1}, {"from": "525", "label": "cosponsor", "to": "244", "width": 1}, {"from": "525", "label": "topic", "to": "555", "width": 1}, {"from": "525", "label": "cosponsor", "to": "61", "width": 1}, {"from": "525", "label": "cosponsor", "to": "196", "width": 1}, {"from": "526", "label": "sponsor", "to": "250", "width": 1}, {"from": "526", "label": "topic", "to": "553", "width": 1}, {"from": "526", "label": "cosponsor", "to": "196", "width": 1}, {"from": "527", "label": "topic", "to": "545", "width": 1}, {"from": "527", "label": "sponsor", "to": "231", "width": 1}, {"from": "527", "label": "cosponsor", "to": "343", "width": 1}, {"from": "527", "label": "cosponsor", "to": "337", "width": 1}, {"from": "527", "label": "cosponsor", "to": "285", "width": 1}, {"from": "527", "label": "cosponsor", "to": "283", "width": 1}, {"from": "527", "label": "cosponsor", "to": "391", "width": 1}, {"from": "527", "label": "cosponsor", "to": "244", "width": 1}, {"from": "527", "label": "cosponsor", "to": "297", "width": 1}, {"from": "528", "label": "cosponsor", "to": "250", "width": 1}, {"from": "528", "label": "topic", "to": "547", "width": 1}, {"from": "528", "label": "cosponsor", "to": "61", "width": 1}, {"from": "529", "label": "sponsor", "to": "95", "width": 1}, {"from": "529", "label": "topic", "to": "552", "width": 1}, {"from": "530", "label": "cosponsor", "to": "95", "width": 1}, {"from": "530", "label": "topic", "to": "549", "width": 1}, {"from": "530", "label": "cosponsor", "to": "283", "width": 1}, {"from": "530", "label": "cosponsor", "to": "213", "width": 1}, {"from": "531", "label": "topic", "to": "545", "width": 1}, {"from": "532", "label": "cosponsor", "to": "231", "width": 1}, {"from": "532", "label": "cosponsor", "to": "285", "width": 1}, {"from": "532", "label": "topic", "to": "549", "width": 1}, {"from": "532", "label": "sponsor", "to": "226", "width": 1}, {"from": "532", "label": "cosponsor", "to": "313", "width": 1}, {"from": "535", "label": "cosponsor", "to": "250", "width": 1}, {"from": "535", "label": "cosponsor", "to": "231", "width": 1}, {"from": "535", "label": "cosponsor", "to": "162", "width": 1}, {"from": "535", "label": "cosponsor", "to": "81", "width": 1}, {"from": "535", "label": "cosponsor", "to": "169", "width": 1}, {"from": "535", "label": "cosponsor", "to": "123", "width": 1}, {"from": "535", "label": "topic", "to": "549", "width": 1}, {"from": "535", "label": "sponsor", "to": "213", "width": 1}, {"from": "536", "label": "cosponsor", "to": "250", "width": 1}, {"from": "536", "label": "cosponsor", "to": "81", "width": 1}, {"from": "536", "label": "cosponsor", "to": "310", "width": 1}, {"from": "536", "label": "cosponsor", "to": "169", "width": 1}, {"from": "536", "label": "cosponsor", "to": "233", "width": 1}, {"from": "536", "label": "cosponsor", "to": "123", "width": 1}, {"from": "536", "label": "topic", "to": "547", "width": 1}, {"from": "536", "label": "sponsor", "to": "66", "width": 1}, {"from": "536", "label": "cosponsor", "to": "354", "width": 1}, {"from": "537", "label": "sponsor", "to": "95", "width": 1}, {"from": "537", "label": "topic", "to": "549", "width": 1}, {"from": "537", "label": "cosponsor", "to": "233", "width": 1}, {"from": "538", "label": "sponsor", "to": "233", "width": 1}, {"from": "538", "label": "topic", "to": "549", "width": 1}, {"from": "539", "label": "sponsor", "to": "95", "width": 1}, {"from": "539", "label": "topic", "to": "556", "width": 1}, {"from": "539", "label": "cosponsor", "to": "235", "width": 1}, {"from": "540", "label": "sponsor", "to": "233", "width": 1}, {"from": "540", "label": "topic", "to": "555", "width": 1}, {"from": "540", "label": "cosponsor", "to": "66", "width": 1}, {"from": "541", "label": "topic", "to": "545", "width": 1}, {"from": "541", "label": "sponsor", "to": "143", "width": 1}, {"from": "541", "label": "cosponsor", "to": "19", "width": 1}, {"from": "541", "label": "cosponsor", "to": "168", "width": 1}, {"from": "541", "label": "cosponsor", "to": "174", "width": 1}, {"from": "541", "label": "cosponsor", "to": "52", "width": 1}, {"from": "541", "label": "cosponsor", "to": "238", "width": 1}, {"from": "541", "label": "cosponsor", "to": "59", "width": 1}, {"from": "541", "label": "cosponsor", "to": "71", "width": 1}, {"from": "541", "label": "cosponsor", "to": "203", "width": 1}, {"from": "541", "label": "cosponsor", "to": "78", "width": 1}, {"from": "541", "label": "cosponsor", "to": "185", "width": 1}, {"from": "541", "label": "cosponsor", "to": "230", "width": 1}, {"from": "541", "label": "cosponsor", "to": "123", "width": 1}, {"from": "541", "label": "cosponsor", "to": "153", "width": 1}, {"from": "542", "label": "cosponsor", "to": "95", "width": 1}, {"from": "542", "label": "topic", "to": "549", "width": 1}, {"from": "542", "label": "sponsor", "to": "85", "width": 1}, {"from": "542", "label": "cosponsor", "to": "123", "width": 1}, {"from": "542", "label": "cosponsor", "to": "235", "width": 1}, {"from": "543", "label": "sponsor", "to": "233", "width": 1}, {"from": "543", "label": "topic", "to": "556", "width": 1}, {"from": "544", "label": "sponsor", "to": "66", "width": 1}, {"from": "544", "label": "topic", "to": "547", "width": 1}, {"from": "533", "label": "topic", "to": "548", "width": 1}, {"from": "533", "label": "sponsor", "to": "354", "width": 1}, {"from": "534", "label": "cosponsor", "to": "123", "width": 1}, {"from": "534", "label": "topic", "to": "549", "width": 1}, {"from": "534", "label": "sponsor", "to": "313", "width": 1}, {"from": "534", "label": "cosponsor", "to": "61", "width": 1}, {"from": "454", "label": "sponsor", "to": "61", "width": 1}, {"from": "454", "label": "topic", "to": "546", "width": 1}, {"from": "455", "label": "sponsor", "to": "41", "width": 1}, {"from": "455", "label": "topic", "to": "547", "width": 1}, {"from": "456", "label": "topic", "to": "548", "width": 1}, {"from": "456", "label": "sponsor", "to": "66", "width": 1}, {"from": "457", "label": "cosponsor", "to": "344", "width": 1}, {"from": "457", "label": "cosponsor", "to": "319", "width": 1}, {"from": "457", "label": "cosponsor", "to": "85", "width": 1}, {"from": "457", "label": "sponsor", "to": "341", "width": 1}, {"from": "457", "label": "cosponsor", "to": "169", "width": 1}, {"from": "457", "label": "cosponsor", "to": "203", "width": 1}, {"from": "457", "label": "cosponsor", "to": "78", "width": 1}, {"from": "457", "label": "topic", "to": "548", "width": 1}, {"from": "457", "label": "cosponsor", "to": "136", "width": 1}, {"from": "457", "label": "cosponsor", "to": "103", "width": 1}, {"from": "457", "label": "cosponsor", "to": "145", "width": 1}, {"from": "457", "label": "cosponsor", "to": "92", "width": 1}, {"from": "457", "label": "cosponsor", "to": "61", "width": 1}, {"from": "457", "label": "cosponsor", "to": "321", "width": 1}, {"from": "457", "label": "cosponsor", "to": "224", "width": 1}, {"from": "457", "label": "cosponsor", "to": "226", "width": 1}, {"from": "457", "label": "cosponsor", "to": "104", "width": 1}, {"from": "457", "label": "cosponsor", "to": "50", "width": 1}, {"from": "458", "label": "sponsor", "to": "20", "width": 1}, {"from": "458", "label": "topic", "to": "547", "width": 1}, {"from": "459", "label": "topic", "to": "548", "width": 1}, {"from": "459", "label": "sponsor", "to": "66", "width": 1}, {"from": "460", "label": "topic", "to": "545", "width": 1}, {"from": "460", "label": "sponsor", "to": "344", "width": 1}, {"from": "460", "label": "cosponsor", "to": "319", "width": 1}, {"from": "460", "label": "cosponsor", "to": "20", "width": 1}, {"from": "460", "label": "cosponsor", "to": "173", "width": 1}, {"from": "460", "label": "cosponsor", "to": "250", "width": 1}, {"from": "460", "label": "cosponsor", "to": "231", "width": 1}, {"from": "460", "label": "cosponsor", "to": "85", "width": 1}, {"from": "460", "label": "cosponsor", "to": "341", "width": 1}, {"from": "461", "label": "topic", "to": "545", "width": 1}, {"from": "461", "label": "sponsor", "to": "344", "width": 1}, {"from": "461", "label": "cosponsor", "to": "341", "width": 1}, {"from": "462", "label": "topic", "to": "548", "width": 1}, {"from": "462", "label": "cosponsor", "to": "163", "width": 1}, {"from": "463", "label": "topic", "to": "548", "width": 1}, {"from": "463", "label": "cosponsor", "to": "66", "width": 1}, {"from": "463", "label": "cosponsor", "to": "163", "width": 1}, {"from": "464", "label": "sponsor", "to": "62", "width": 1}, {"from": "464", "label": "topic", "to": "549", "width": 1}, {"from": "465", "label": "cosponsor", "to": "344", "width": 1}, {"from": "465", "label": "cosponsor", "to": "319", "width": 1}, {"from": "465", "label": "cosponsor", "to": "85", "width": 1}, {"from": "465", "label": "sponsor", "to": "123", "width": 1}, {"from": "465", "label": "topic", "to": "550", "width": 1}, {"from": "465", "label": "cosponsor", "to": "226", "width": 1}, {"from": "466", "label": "topic", "to": "548", "width": 1}, {"from": "466", "label": "sponsor", "to": "66", "width": 1}, {"from": "467", "label": "sponsor", "to": "85", "width": 1}, {"from": "467", "label": "topic", "to": "548", "width": 1}, {"from": "468", "label": "topic", "to": "548", "width": 1}, {"from": "468", "label": "sponsor", "to": "66", "width": 1}, {"from": "469", "label": "cosponsor", "to": "163", "width": 1}, {"from": "469", "label": "sponsor", "to": "66", "width": 1}, {"from": "469", "label": "topic", "to": "547", "width": 1}, {"from": "470", "label": "cosponsor", "to": "344", "width": 1}, {"from": "470", "label": "cosponsor", "to": "20", "width": 1}, {"from": "470", "label": "cosponsor", "to": "173", "width": 1}, {"from": "470", "label": "cosponsor", "to": "341", "width": 1}, {"from": "470", "label": "topic", "to": "551", "width": 1}, {"from": "470", "label": "sponsor", "to": "41", "width": 1}, {"from": "471", "label": "topic", "to": "548", "width": 1}, {"from": "471", "label": "sponsor", "to": "196", "width": 1}, {"from": "472", "label": "topic", "to": "549", "width": 1}, {"from": "472", "label": "sponsor", "to": "10", "width": 1}, {"from": "472", "label": "cosponsor", "to": "163", "width": 1}, {"from": "473", "label": "sponsor", "to": "100", "width": 1}, {"from": "473", "label": "topic", "to": "552", "width": 1}, {"from": "474", "label": "sponsor", "to": "100", "width": 1}, {"from": "474", "label": "topic", "to": "553", "width": 1}, {"from": "475", "label": "topic", "to": "547", "width": 1}, {"from": "476", "label": "sponsor", "to": "143", "width": 1}, {"from": "476", "label": "topic", "to": "547", "width": 1}, {"from": "477", "label": "topic", "to": "550", "width": 1}, {"from": "477", "label": "sponsor", "to": "10", "width": 1}, {"from": "478", "label": "sponsor", "to": "100", "width": 1}, {"from": "478", "label": "topic", "to": "553", "width": 1}, {"from": "479", "label": "sponsor", "to": "123", "width": 1}, {"from": "479", "label": "topic", "to": "549", "width": 1}, {"from": "480", "label": "cosponsor", "to": "344", "width": 1}, {"from": "480", "label": "cosponsor", "to": "319", "width": 1}, {"from": "480", "label": "cosponsor", "to": "250", "width": 1}, {"from": "480", "label": "cosponsor", "to": "231", "width": 1}, {"from": "480", "label": "cosponsor", "to": "85", "width": 1}, {"from": "480", "label": "cosponsor", "to": "341", "width": 1}, {"from": "480", "label": "sponsor", "to": "62", "width": 1}, {"from": "480", "label": "cosponsor", "to": "81", "width": 1}, {"from": "480", "label": "cosponsor", "to": "169", "width": 1}, {"from": "480", "label": "cosponsor", "to": "143", "width": 1}, {"from": "480", "label": "cosponsor", "to": "123", "width": 1}, {"from": "480", "label": "topic", "to": "549", "width": 1}, {"from": "480", "label": "cosponsor", "to": "235", "width": 1}, {"from": "480", "label": "cosponsor", "to": "163", "width": 1}, {"from": "480", "label": "cosponsor", "to": "61", "width": 1}, {"from": "480", "label": "cosponsor", "to": "354", "width": 1}, {"from": "480", "label": "cosponsor", "to": "196", "width": 1}, {"from": "480", "label": "cosponsor", "to": "66", "width": 1}, {"from": "481", "label": "topic", "to": "545", "width": 1}, {"from": "481", "label": "sponsor", "to": "100", "width": 1}, {"from": "482", "label": "sponsor", "to": "95", "width": 1}, {"from": "482", "label": "topic", "to": "549", "width": 1}, {"from": "483", "label": "cosponsor", "to": "123", "width": 1}, {"from": "483", "label": "topic", "to": "548", "width": 1}, {"from": "483", "label": "cosponsor", "to": "235", "width": 1}, {"from": "483", "label": "sponsor", "to": "354", "width": 1}, {"from": "483", "label": "cosponsor", "to": "246", "width": 1}, {"from": "484", "label": "sponsor", "to": "100", "width": 1}, {"from": "484", "label": "topic", "to": "552", "width": 1}, {"from": "485", "label": "sponsor", "to": "66", "width": 1}, {"from": "485", "label": "topic", "to": "547", "width": 1}, {"from": "486", "label": "sponsor", "to": "100", "width": 1}, {"from": "486", "label": "topic", "to": "552", "width": 1}, {"from": "487", "label": "topic", "to": "549", "width": 1}, {"from": "487", "label": "sponsor", "to": "61", "width": 1}, {"from": "488", "label": "cosponsor", "to": "174", "width": 1}, {"from": "488", "label": "cosponsor", "to": "71", "width": 1}, {"from": "488", "label": "cosponsor", "to": "203", "width": 1}, {"from": "488", "label": "cosponsor", "to": "185", "width": 1}, {"from": "488", "label": "cosponsor", "to": "230", "width": 1}, {"from": "488", "label": "topic", "to": "552", "width": 1}, {"from": "488", "label": "sponsor", "to": "313", "width": 1}, {"from": "488", "label": "cosponsor", "to": "241", "width": 1}, {"from": "488", "label": "cosponsor", "to": "295", "width": 1}, {"from": "488", "label": "cosponsor", "to": "92", "width": 1}, {"from": "488", "label": "cosponsor", "to": "330", "width": 1}, {"from": "488", "label": "cosponsor", "to": "35", "width": 1}, {"from": "488", "label": "cosponsor", "to": "381", "width": 1}, {"from": "488", "label": "cosponsor", "to": "331", "width": 1}, {"from": "488", "label": "cosponsor", "to": "260", "width": 1}, {"from": "488", "label": "cosponsor", "to": "276", "width": 1}, {"from": "488", "label": "cosponsor", "to": "217", "width": 1}, {"from": "488", "label": "cosponsor", "to": "268", "width": 1}, {"from": "488", "label": "cosponsor", "to": "240", "width": 1}, {"from": "488", "label": "cosponsor", "to": "155", "width": 1}, {"from": "488", "label": "cosponsor", "to": "273", "width": 1}, {"from": "488", "label": "cosponsor", "to": "120", "width": 1}, {"from": "488", "label": "cosponsor", "to": "25", "width": 1}, {"from": "488", "label": "cosponsor", "to": "105", "width": 1}, {"from": "488", "label": "cosponsor", "to": "345", "width": 1}, {"from": "489", "label": "sponsor", "to": "95", "width": 1}, {"from": "489", "label": "topic", "to": "552", "width": 1}, {"from": "490", "label": "cosponsor", "to": "81", "width": 1}, {"from": "490", "label": "cosponsor", "to": "169", "width": 1}, {"from": "490", "label": "sponsor", "to": "123", "width": 1}, {"from": "490", "label": "topic", "to": "549", "width": 1}, {"from": "491", "label": "sponsor", "to": "250", "width": 1}, {"from": "491", "label": "cosponsor", "to": "162", "width": 1}, {"from": "491", "label": "cosponsor", "to": "310", "width": 1}, {"from": "491", "label": "cosponsor", "to": "244", "width": 1}, {"from": "491", "label": "topic", "to": "553", "width": 1}, {"from": "491", "label": "cosponsor", "to": "313", "width": 1}, {"from": "491", "label": "cosponsor", "to": "196", "width": 1}, {"from": "492", "label": "sponsor", "to": "61", "width": 1}, {"from": "492", "label": "topic", "to": "554", "width": 1}, {"from": "493", "label": "cosponsor", "to": "250", "width": 1}, {"from": "493", "label": "cosponsor", "to": "62", "width": 1}, {"from": "493", "label": "cosponsor", "to": "81", "width": 1}, {"from": "493", "label": "cosponsor", "to": "310", "width": 1}, {"from": "493", "label": "cosponsor", "to": "169", "width": 1}, {"from": "493", "label": "cosponsor", "to": "233", "width": 1}, {"from": "493", "label": "topic", "to": "548", "width": 1}, {"from": "493", "label": "sponsor", "to": "66", "width": 1}, {"from": "493", "label": "cosponsor", "to": "196", "width": 1}, {"from": "494", "label": "topic", "to": "545", "width": 1}, {"from": "494", "label": "sponsor", "to": "285", "width": 1}, {"from": "494", "label": "cosponsor", "to": "62", "width": 1}, {"from": "494", "label": "cosponsor", "to": "162", "width": 1}, {"from": "494", "label": "cosponsor", "to": "81", "width": 1}, {"from": "494", "label": "cosponsor", "to": "343", "width": 1}, {"from": "494", "label": "cosponsor", "to": "310", "width": 1}, {"from": "494", "label": "cosponsor", "to": "169", "width": 1}, {"from": "495", "label": "sponsor", "to": "95", "width": 1}, {"from": "495", "label": "topic", "to": "548", "width": 1}, {"from": "496", "label": "sponsor", "to": "100", "width": 1}, {"from": "496", "label": "topic", "to": "549", "width": 1}, {"from": "497", "label": "topic", "to": "545", "width": 1}, {"from": "497", "label": "cosponsor", "to": "95", "width": 1}, {"from": "497", "label": "sponsor", "to": "233", "width": 1}, {"from": "498", "label": "sponsor", "to": "250", "width": 1}, {"from": "498", "label": "topic", "to": "553", "width": 1}, {"from": "499", "label": "sponsor", "to": "20", "width": 1}, {"from": "499", "label": "topic", "to": "549", "width": 1}, {"from": "500", "label": "sponsor", "to": "41", "width": 1}, {"from": "500", "label": "topic", "to": "547", "width": 1}, {"from": "501", "label": "sponsor", "to": "20", "width": 1}, {"from": "501", "label": "topic", "to": "547", "width": 1}, {"from": "502", "label": "topic", "to": "547", "width": 1}, {"from": "502", "label": "sponsor", "to": "155", "width": 1}, {"from": "503", "label": "sponsor", "to": "20", "width": 1}, {"from": "503", "label": "topic", "to": "548", "width": 1}, {"from": "504", "label": "sponsor", "to": "41", "width": 1}, {"from": "504", "label": "topic", "to": "547", "width": 1}, {"from": "505", "label": "sponsor", "to": "123", "width": 1}, {"from": "505", "label": "topic", "to": "549", "width": 1}, {"from": "506", "label": "sponsor", "to": "41", "width": 1}, {"from": "506", "label": "topic", "to": "547", "width": 1}, {"from": "507", "label": "sponsor", "to": "62", "width": 1}, {"from": "507", "label": "topic", "to": "550", "width": 1}, {"from": "508", "label": "topic", "to": "547", "width": 1}, {"from": "508", "label": "sponsor", "to": "155", "width": 1}, {"from": "509", "label": "topic", "to": "545", "width": 1}, {"from": "510", "label": "sponsor", "to": "20", "width": 1}, {"from": "510", "label": "topic", "to": "547", "width": 1}, {"from": "511", "label": "sponsor", "to": "41", "width": 1}, {"from": "511", "label": "topic", "to": "547", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 200
+        },
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.1,
+            "damping": 0.09,
+            "nodeDistance": 400,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

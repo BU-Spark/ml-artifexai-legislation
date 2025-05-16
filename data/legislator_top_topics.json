@@ -1,0 +1,914 @@
+{
+    "10": {
+        "First": "David",
+        "Last": "Biele",
+        "District": "4th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            6,
+            "Child Protection & Criminal Justice"
+        ]
+    },
+    "19": {
+        "First": "Mike",
+        "Last": "Connolly",
+        "District": "26th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "20": {
+        "First": "Rob",
+        "Last": "Consalvo",
+        "District": "14th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            16,
+            "Emergency Services & Municipal Hiring",
+            4,
+            "Affordable Housing & Homelessness",
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "25": {
+        "First": "Marjorie",
+        "Last": "Decker",
+        "District": "25th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "35": {
+        "First": "Tricia",
+        "Last": "Farley-Bouvier",
+        "District": "2nd Berkshire",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "41": {
+        "First": "Brandy",
+        "Last": "Fluker-Reid",
+        "District": "12th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            16,
+            "Emergency Services & Municipal Hiring",
+            9,
+            "Veterans & Tax Policy"
+        ]
+    },
+    "50": {
+        "First": "Jessica",
+        "Last": "Giannino",
+        "District": "16th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "52": {
+        "First": "Carlos",
+        "Last": "Gonz\u00e1lez",
+        "District": "10th Hampden",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "59": {
+        "First": "Natalie",
+        "Last": "Higgins",
+        "District": "4th Worcester",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "61": {
+        "First": "Russell",
+        "Last": "Holmes",
+        "District": "6th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            2,
+            "Labor, Employment & Economic Growth",
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "62": {
+        "First": "Kevin",
+        "Last": "Honan",
+        "District": "17th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            4,
+            "Affordable Housing & Homelessness",
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "64": {
+        "First": "Vanna",
+        "Last": "Howard",
+        "District": "17th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "66": {
+        "First": "Daniel",
+        "Last": "Hunt",
+        "District": "13th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            16,
+            "Emergency Services & Municipal Hiring",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "71": {
+        "First": "Mary",
+        "Last": "Keefe",
+        "District": "15th Worcester",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "78": {
+        "First": "Jack",
+        "Last": "Lewis",
+        "District": "7th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "81": {
+        "First": "Jay",
+        "Last": "Livingstone",
+        "District": "8th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            15,
+            "Retirement & Pensions",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "85": {
+        "First": "Adrian",
+        "Last": "Madaro",
+        "District": "1st Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            18,
+            "Public Land & City Property Management",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "92": {
+        "First": "Paul",
+        "Last": "McMurtry",
+        "District": "11th Norfolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "95": {
+        "First": "Aaron",
+        "Last": "Michlewitz",
+        "District": "3rd Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            4,
+            "Affordable Housing & Homelessness",
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "97": {
+        "First": "Samantha",
+        "Last": "Monta\u00f1o",
+        "District": "15th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "100": {
+        "First": "Michael",
+        "Last": "Moran",
+        "District": "18th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance",
+            10,
+            "Alcohol Licensing & Sales",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "103": {
+        "First": "Brian",
+        "Last": "Murray",
+        "District": "10th Worcester",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "104": {
+        "First": "Tram",
+        "Last": "Nguyen",
+        "District": "18th Essex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "105": {
+        "First": "James",
+        "Last": "O'Day",
+        "District": "14th Worcester",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "120": {
+        "First": "David",
+        "Last": "Rogers",
+        "District": "24th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "123": {
+        "First": "Daniel",
+        "Last": "Ryan",
+        "District": "2nd Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            6,
+            "Child Protection & Criminal Justice",
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "136": {
+        "First": "Thomas",
+        "Last": "Stanley",
+        "District": "9th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "143": {
+        "First": "Chynah",
+        "Last": "Tyler",
+        "District": "7th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            16,
+            "Emergency Services & Municipal Hiring",
+            18,
+            "Public Land & City Property Management",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "145": {
+        "First": "Erika",
+        "Last": "Uyterhoeven",
+        "District": "27th Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "153": {
+        "First": "Bud",
+        "Last": "Williams",
+        "District": "11th Hampden",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "155": {
+        "First": "Christopher",
+        "Last": "Worrell",
+        "District": "5th Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            16,
+            "Emergency Services & Municipal Hiring",
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "162": {
+        "First": "William",
+        "Last": "Brownsberger",
+        "District": "Suffolk and Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            10,
+            "Alcohol Licensing & Sales",
+            4,
+            "Affordable Housing & Homelessness",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "163": {
+        "First": "Nick",
+        "Last": "Collins",
+        "District": "First Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            18,
+            "Public Land & City Property Management",
+            16,
+            "Emergency Services & Municipal Hiring"
+        ]
+    },
+    "168": {
+        "First": "Julian",
+        "Last": "Cyr",
+        "District": "Cape and Islands",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "169": {
+        "First": "Sal",
+        "Last": "DiDomenico",
+        "District": "Middlesex and Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            15,
+            "Retirement & Pensions",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "173": {
+        "First": "Lydia",
+        "Last": "Edwards",
+        "District": "Third Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            9,
+            "Veterans & Tax Policy"
+        ]
+    },
+    "174": {
+        "First": "James",
+        "Last": "Eldridge",
+        "District": "Middlesex and Worcester",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "185": {
+        "First": "Jason",
+        "Last": "Lewis",
+        "District": "Fifth Middlesex",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "196": {
+        "First": "Michael",
+        "Last": "Rush",
+        "District": "Norfolk and Suffolk",
+        "Party": "Democrat",
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            10,
+            "Alcohol Licensing & Sales",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "203": {
+        "First": "Kay",
+        "Last": "Khan",
+        "District": "['11th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            19,
+            "Town Elections & Local Governance",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "213": {
+        "First": "Angelo M.",
+        "Last": "Scaccia",
+        "District": "['14th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "217": {
+        "First": "Ruth B.",
+        "Last": "Balser",
+        "District": "['12th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "224": {
+        "First": "Walter F.",
+        "Last": "Timilty",
+        "District": "['Norfolk, Bristol and Plymouth', 'Norfolk, Plymouth and Bristol']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "226": {
+        "First": "Sonia",
+        "Last": "Chang-Diaz",
+        "District": "['Second Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            6,
+            "Child Protection & Criminal Justice",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "230": {
+        "First": "Denise",
+        "Last": "Provost",
+        "District": "['27th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "231": {
+        "First": "Elizabeth A.",
+        "Last": "Malia",
+        "District": "['11th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            4,
+            "Affordable Housing & Homelessness",
+            1,
+            "Education & Schools"
+        ]
+    },
+    "233": {
+        "First": "Nick",
+        "Last": "Collins",
+        "District": "['4th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            1,
+            "Education & Schools",
+            18,
+            "Public Land & City Property Management",
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "235": {
+        "First": "Joseph A.",
+        "Last": "Boncore",
+        "District": "['First Suffolk and Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            15,
+            "Retirement & Pensions",
+            7,
+            "Environmental Resources & Utilities"
+        ]
+    },
+    "238": {
+        "First": "Paul",
+        "Last": "Heroux",
+        "District": "['2nd Bristol']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "240": {
+        "First": "Tom",
+        "Last": "Sannicandro",
+        "District": "['7th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "241": {
+        "First": "Jennifer E.",
+        "Last": "Benson",
+        "District": "['37th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "244": {
+        "First": "Martin J.",
+        "Last": "Walsh",
+        "District": "['13th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            10,
+            "Alcohol Licensing & Sales",
+            1,
+            "Education & Schools",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "246": {
+        "First": "Timothy R.",
+        "Last": "Whelan",
+        "District": "['1st Barnstable']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "248": {
+        "First": "Anthony W.",
+        "Last": "Petruccelli",
+        "District": "['First Suffolk and Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            10,
+            "Alcohol Licensing & Sales"
+        ]
+    },
+    "250": {
+        "First": "Edward F.",
+        "Last": "Coppinger",
+        "District": "['10th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            10,
+            "Alcohol Licensing & Sales",
+            16,
+            "Emergency Services & Municipal Hiring",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "260": {
+        "First": "Peter V.",
+        "Last": "Kocot",
+        "District": "['1st Hampshire']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "268": {
+        "First": "Jay R.",
+        "Last": "Kaufman",
+        "District": "['15th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "273": {
+        "First": "Benjamin",
+        "Last": "Swan",
+        "District": "['11th Hampden']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "276": {
+        "First": "Jonathan",
+        "Last": "Hecht",
+        "District": "['29th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "283": {
+        "First": "Martha M.",
+        "Last": "Walz",
+        "District": "['8th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "285": {
+        "First": "Byron",
+        "Last": "Rushing",
+        "District": "['9th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            1,
+            "Education & Schools",
+            18,
+            "Public Land & City Property Management"
+        ]
+    },
+    "295": {
+        "First": "Cheryl A.",
+        "Last": "Coakley-Rivera",
+        "District": "['10th Hampden']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "297": {
+        "First": "Jeffrey",
+        "Last": "S\u00e1nchez",
+        "District": "['15th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "310": {
+        "First": "Linda Dorcena",
+        "Last": "Forry",
+        "District": "['First Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            10,
+            "Alcohol Licensing & Sales",
+            15,
+            "Retirement & Pensions",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "313": {
+        "First": "Gloria L.",
+        "Last": "Fox",
+        "District": "['7th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            18,
+            "Public Land & City Property Management",
+            19,
+            "Town Elections & Local Governance",
+            10,
+            "Alcohol Licensing & Sales"
+        ]
+    },
+    "319": {
+        "First": "Jon",
+        "Last": "Santiago",
+        "District": "['9th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            4,
+            "Affordable Housing & Homelessness",
+            6,
+            "Child Protection & Criminal Justice"
+        ]
+    },
+    "321": {
+        "First": "Peter",
+        "Last": "Capano",
+        "District": "['11th Essex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions"
+        ]
+    },
+    "330": {
+        "First": "Cory",
+        "Last": "Atkins",
+        "District": "['14th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "331": {
+        "First": "Carl M.",
+        "Last": "Sciortino",
+        "District": "['34th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "337": {
+        "First": "Linda Dorcena",
+        "Last": "Forry",
+        "District": "['12th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            1,
+            "Education & Schools",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    },
+    "341": {
+        "First": "Liz",
+        "Last": "Miranda",
+        "District": "['5th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            15,
+            "Retirement & Pensions",
+            9,
+            "Veterans & Tax Policy"
+        ]
+    },
+    "343": {
+        "First": "Carlo",
+        "Last": "Basile",
+        "District": "['1st Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            10,
+            "Alcohol Licensing & Sales",
+            1,
+            "Education & Schools"
+        ]
+    },
+    "344": {
+        "First": "Nika C.",
+        "Last": "Elugardo",
+        "District": "['15th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            4,
+            "Affordable Housing & Homelessness",
+            15,
+            "Retirement & Pensions",
+            6,
+            "Child Protection & Criminal Justice"
+        ]
+    },
+    "345": {
+        "First": "Thomas P.",
+        "Last": "Conroy",
+        "District": "['13th Middlesex']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "354": {
+        "First": "Daniel",
+        "Last": "Cullinane",
+        "District": "['12th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            15,
+            "Retirement & Pensions",
+            18,
+            "Public Land & City Property Management",
+            16,
+            "Emergency Services & Municipal Hiring"
+        ]
+    },
+    "381": {
+        "First": "Denise",
+        "Last": "Andrews",
+        "District": "['2nd Franklin']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            19,
+            "Town Elections & Local Governance"
+        ]
+    },
+    "391": {
+        "First": "Carlos",
+        "Last": "Henriquez",
+        "District": "['5th Suffolk']",
+        "Party": NaN,
+        "Top 3 Topics": [
+            1,
+            "Education & Schools",
+            4,
+            "Affordable Housing & Homelessness"
+        ]
+    }
+}
